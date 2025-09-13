@@ -1,18 +1,5 @@
-/*
-Chit Fund Application with Calendar Dates
-
-How to use:
-1. Create a React app:
-   npx create-react-app chitfund
-2. Replace src/App.js with this file.
-3. Keep src/App.css (or customize).
-4. Run:
-   npm install
-   npm start
-*/
-
-import React, { useEffect, useState, useMemo } from "react";
-import { db } from "./firebase";
+import React, { useState, useEffect, useMemo } from "react";
+import Login from "./Login";
 import "./App.css";
 
 const MEMBER_COUNT = 30;
@@ -27,7 +14,7 @@ function makeInitialMembers() {
 }
 
 function makeEmptyRecords() {
-  return {}; // map date -> { memberId: amount }
+  return {};
 }
 
 function loadFromStorage() {
@@ -46,6 +33,18 @@ function saveToStorage(payload) {
 }
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
+
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
+
+  return <Dashboard onLogout={() => setIsLoggedIn(false)} />;
+}
+
+function Dashboard({ onLogout }) {
   const [members, setMembers] = useState(() => {
     const saved = loadFromStorage();
     return saved?.members ?? makeInitialMembers();
@@ -56,9 +55,9 @@ export default function App() {
     return saved?.records ?? makeEmptyRecords();
   });
 
-  const [currentDate, setCurrentDate] = useState(() => {
-    return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  });
+  const [currentDate, setCurrentDate] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
 
   const [editingAmounts, setEditingAmounts] = useState(() => {
     const saved = loadFromStorage();
@@ -77,7 +76,10 @@ export default function App() {
   }, [currentDate, records]);
 
   const totalCollectedForDay = useMemo(() => {
-    return Object.values(editingAmounts).reduce((s, v) => s + Number(v || 0), 0);
+    return Object.values(editingAmounts).reduce(
+      (s, v) => s + Number(v || 0),
+      0
+    );
   }, [editingAmounts]);
 
   const grandTotal = useMemo(() => {
@@ -119,12 +121,16 @@ export default function App() {
   }
 
   function updateMemberName(id, newName) {
-    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, name: newName } : m)));
+    setMembers((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, name: newName } : m))
+    );
   }
 
   function exportData() {
     const payload = { members, records };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -152,20 +158,38 @@ export default function App() {
   }
 
   return (
-    <div style={styles.container}>
-      <header style={styles.header}>
+    <div className="container">
+      <header className="header">
         <h1>YUVAMITHRA ONAM CHIT FUND</h1>
-        <div style={styles.headerRight}>
-          <button style={styles.smallBtn} onClick={exportData}>Export</button>
-          <label style={styles.importLabel}>
+        <div className="headerRight">
+          <button className="smallBtn" onClick={exportData}>
+            Export
+          </button>
+          <label className="importLabel">
             Import
-            <input type="file" accept="application/json" onChange={importData} style={{ display: "none" }} />
+            <input
+              type="file"
+              accept="application/json"
+              onChange={importData}
+              style={{ display: "none" }}
+            />
           </label>
-          <button style={styles.dangerBtn} onClick={resetAll}>Reset All</button>
+          <button className="dangerBtn" onClick={resetAll}>
+            Reset All
+          </button>
+          <button
+            className="dangerBtn"
+            onClick={() => {
+              localStorage.removeItem("isLoggedIn");
+              onLogout();
+            }}
+          >
+            Logout
+          </button>
         </div>
       </header>
 
-      <section style={styles.controls}>
+      <section className="controls">
         <div>
           <label>Select Date: </label>
           <input
@@ -176,33 +200,33 @@ export default function App() {
         </div>
 
         <div>
-          <strong>Date Total:</strong> {totalCollectedForDay} &nbsp; | &nbsp; 
+          <strong>Date Total:</strong> {totalCollectedForDay} &nbsp; | &nbsp;
           <strong>Grand Total:</strong> {grandTotal}
         </div>
       </section>
 
-      <main style={styles.main}>
-        <div style={styles.left}>
+      <main className="main">
+        <div className="left">
           <h2>Members</h2>
-          <div style={styles.tableHeader}>
+          <div className="tableHeader">
             <div>#</div>
             <div>Name</div>
             <div>Amount</div>
           </div>
-          <div style={styles.scrollArea}>
+          <div className="scrollArea">
             {members.map((m) => (
-              <div key={m.id} style={styles.row}>
+              <div key={m.id} className="row">
                 <div style={{ width: 30 }}>{m.id}</div>
                 <div style={{ flex: 1 }}>
                   <input
-                    style={styles.input}
+                    className="input"
                     value={m.name}
                     onChange={(e) => updateMemberName(m.id, e.target.value)}
                   />
                 </div>
                 <div style={{ width: 120 }}>
                   <input
-                    style={styles.input}
+                    className="input"
                     type="number"
                     min="0"
                     value={editingAmounts[m.id] ?? ""}
@@ -213,13 +237,19 @@ export default function App() {
             ))}
           </div>
 
-          <div style={styles.buttonsRow}>
-            <button style={styles.primaryBtn} onClick={submitDay}>Submit</button>
-            <button style={styles.secondaryBtn} onClick={resetDay}>Reset</button>
+          <div className="buttonsRow">
+            <button className="primaryBtn" onClick={submitDay}>
+              Submit
+            </button>
+            <button className="secondaryBtn" onClick={resetDay}>
+              Reset
+            </button>
             <button
-              style={styles.secondaryBtn}
+              className="secondaryBtn"
               onClick={() => {
-                const val = prompt("Enter amount to quick-fill all members (leave empty to cancel)");
+                const val = prompt(
+                  "Enter amount to quick-fill all members (leave empty to cancel)"
+                );
                 if (!val) return;
                 const num = Number(val);
                 if (isNaN(num)) return alert("Invalid number");
@@ -233,14 +263,20 @@ export default function App() {
           </div>
         </div>
 
-        <div style={styles.right}>
+        <div className="right">
           <h2>Saved Records</h2>
-          <RecordsViewer records={records} members={members} setCurrentDate={setCurrentDate} />
+          <RecordsViewer
+            records={records}
+            members={members}
+            setCurrentDate={setCurrentDate}
+          />
         </div>
       </main>
 
-      <footer style={styles.footer}>
-        <small>Data saved in your browser (localStorage). Use Export to backup.</small>
+      <footer className="footer">
+        <small>
+          Data saved in your browser (localStorage). Use Export to backup.
+        </small>
       </footer>
     </div>
   );
@@ -250,26 +286,36 @@ function RecordsViewer({ records, members, setCurrentDate }) {
   const dates = Object.keys(records).sort();
 
   return (
-    <div style={{ border: "1px solid #ddd", padding: 10, borderRadius: 6, maxHeight: 500, overflow: "auto" }}>
+    <div className="recordsBox">
       <h3>All Dates</h3>
-      {dates.length === 0 ? <p>No data yet.</p> : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      {dates.length === 0 ? (
+        <p>No data yet.</p>
+      ) : (
+        <table className="recordsTable">
           <thead>
             <tr>
-              <th style={cellStyle}>Date</th>
-              <th style={cellStyle}>Total</th>
-              <th style={cellStyle}>Action</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {dates.map((d) => {
-              const total = Object.values(records[d]).reduce((s, v) => s + Number(v || 0), 0);
+              const total = Object.values(records[d]).reduce(
+                (s, v) => s + Number(v || 0),
+                0
+              );
               return (
                 <tr key={d}>
-                  <td style={cellStyle}>{d}</td>
-                  <td style={cellStyle}>{total}</td>
-                  <td style={cellStyle}>
-                    <button style={styles.smallBtn} onClick={() => setCurrentDate(d)}>View</button>
+                  <td>{d}</td>
+                  <td>{total}</td>
+                  <td>
+                    <button
+                      className="smallBtn"
+                      onClick={() => setCurrentDate(d)}
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               );
@@ -280,27 +326,3 @@ function RecordsViewer({ records, members, setCurrentDate }) {
     </div>
   );
 }
-
-// inline styles
-const styles = {
-  container: { fontFamily: "Segoe UI, Roboto, Arial", padding: 16, maxWidth: 1100, margin: "0 auto" },
-  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
-  headerRight: { display: "flex", gap: 8, alignItems: "center" },
-  controls: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, gap: 10 },
-  main: { display: "flex", gap: 16 },
-  left: { flex: 1, border: "1px solid #eee", padding: 12, borderRadius: 8, minHeight: 500 },
-  right: { width: 420 },
-  tableHeader: { display: "flex", gap: 10, fontWeight: "bold", marginBottom: 6, alignItems: "center" },
-  row: { display: "flex", gap: 10, alignItems: "center", padding: "6px 0", borderBottom: "1px solid #fafafa" },
-  input: { width: "100%", padding: 6, borderRadius: 4, border: "1px solid #ccc" },
-  scrollArea: { maxHeight: 420, overflow: "auto" },
-  buttonsRow: { marginTop: 10, display: "flex", gap: 8 },
-  primaryBtn: { padding: "8px 12px", borderRadius: 6, border: "none", background: "#2b7cff", color: "white", cursor: "pointer" },
-  secondaryBtn: { padding: "8px 12px", borderRadius: 6, border: "1px solid #888", background: "white", cursor: "pointer" },
-  dangerBtn: { padding: "6px 10px", borderRadius: 6, border: "none", background: "#d9534f", color: "white", cursor: "pointer" },
-  smallBtn: { padding: "4px 6px", borderRadius: 6, border: "1px solid #888", background: "white", cursor: "pointer" },
-  importLabel: { padding: "6px 8px", border: "1px solid #888", borderRadius: 6, cursor: "pointer" },
-  footer: { marginTop: 12, textAlign: "center", color: "#666" },
-};
-
-const cellStyle = { border: "1px solid #f1f1f1", padding: 6, textAlign: "left" };
