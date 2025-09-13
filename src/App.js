@@ -12,6 +12,7 @@ How to use:
 */
 
 import React, { useEffect, useState, useMemo } from "react";
+import { db } from "./firebase";
 import "./App.css";
 
 const MEMBER_COUNT = 30;
