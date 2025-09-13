@@ -1,38 +1,179 @@
-.App {
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+.container {
+  padding: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.headerRight {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.main {
+  display: flex;
+  gap: 16px;
+}
+
+.left {
+  flex: 1;
+  border: 1px solid #eee;
+  padding: 12px;
+  border-radius: 8px;
+  min-height: 500px;
+}
+
+.right {
+  width: 420px;
+}
+
+.tableHeader {
+  display: flex;
+  gap: 10px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #fafafa;
+}
+
+.input {
+  width: 100%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.scrollArea {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.buttonsRow {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.primaryBtn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #2b7cff;
+  color: white;
+  cursor: pointer;
+}
+
+.secondaryBtn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #888;
+  background: white;
+  cursor: pointer;
+}
+
+.dangerBtn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #d9534f;
+  color: white;
+  cursor: pointer;
+}
+
+.smallBtn {
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid #888;
+  background: white;
+  cursor: pointer;
+}
+
+.importLabel {
+  padding: 6px 8px;
+  border: 1px solid #888;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.footer {
+  margin-top: 12px;
   text-align: center;
+  color: #666;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.recordsBox {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  max-height: 500px;
+  overflow: auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.recordsTable {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.recordsTable th,
+.recordsTable td {
+  border: 1px solid #f1f1f1;
+  padding: 6px;
+  text-align: left;
+}
+
+/* Login Page */
+.loginContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 100vh;
+}
+
+.loginContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loginContainer input {
+  padding: 8px;
+  width: 200px;
+}
+
+.loginContainer button {
+  padding: 8px 16px;
+  background: #2b7cff;
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
