@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/chitfund/static/css/main.f855e6bc.css",
+    "main.js": "/chitfund/static/js/main.d6bf85e6.js",
+    "static/js/453.c2528bda.chunk.js": "/chitfund/static/js/453.c2528bda.chunk.js",
+    "index.html": "/chitfund/index.html",
+    "main.f855e6bc.css.map": "/chitfund/static/css/main.f855e6bc.css.map",
+    "main.d6bf85e6.js.map": "/chitfund/static/js/main.d6bf85e6.js.map",
+    "453.c2528bda.chunk.js.map": "/chitfund/static/js/453.c2528bda.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.d6bf85e6.js"
+  ]
+}
